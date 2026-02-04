@@ -16,6 +16,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         title = "Storm Viewer"
         navigationItem.backButtonDisplayMode = .minimal
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .action,
+            target: self,
+            action: #selector(shareApp)
+        )
         navigationController?.navigationBar.prefersLargeTitles = true
         
         let fm = FileManager.default
@@ -31,6 +36,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         pictures.sort()
         
         setupTableView()
+    }
+    
+    @objc func shareApp() {
+        let message = "I've been using Storm Viewer and thought you might like it!"
+        let appURL = URL(string: "https://example.com/storm-viewer-app")
+        
+        var items = [Any]()
+        items.append(message)
+        
+        if let appURL {
+            items.append(appURL)
+        }
+        
+        let activityViewController = UIActivityViewController(
+            activityItems: items,
+            applicationActivities: nil
+        )
+        
+        if let popover = activityViewController.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+        }
+        
+        present(activityViewController, animated: true)
     }
     
     func setupTableView() {

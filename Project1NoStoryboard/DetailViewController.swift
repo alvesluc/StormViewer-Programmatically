@@ -23,10 +23,37 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
 
         navigationItem.largeTitleDisplayMode = .never
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .action,
+            target: self,
+            action: #selector(shareImage)
+        )
         title = selectedImageCountTitle
         
         setupImageView()
         loadImage()
+    }
+    
+    @objc func shareImage() {
+        guard let image = imageView.image else { return }
+        
+        var items = [Any]()
+        items.append(image)
+        
+        if let selectedImageName {
+            items.append(selectedImageName)
+        }
+        
+        let activityVC = UIActivityViewController(
+            activityItems: items,
+            applicationActivities: nil
+        )
+        
+        if let popover = activityVC.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+        }
+        
+        present(activityVC, animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
